@@ -17,23 +17,30 @@ const GrowingButton = () => {
     setIsGrowing(!isGrowing);
   };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (isGrowing) {
-        if (buttonSize < 200) {
-          setButtonSize((prevSize) => prevSize + 10);
-        } else {
-          setIsGrowing(false);
-        }
-      } else {
-        if (buttonSize > 100) {
-          setButtonSize((prevSize) => prevSize - 10);
-        } else {
-          setIsGrowing(true);
-        }
+  const adjustSize = () => {
+    if (isGrowing && buttonSize > 200) {
+      setButtonSize((prevSize) => prevSize + 10);
+    } else if (!isGrowing && buttonSize > 100) {
+      setButtonSize((prevSize) => prevSize - 10);
+    }
+  };
+
+  React.useEffect(() => {
+    if (isGrowing) {
+      if (buttonSize < 200) {
+        const interval = setInterval(() => {
+          setButtonSize((prevSize) => prevSize + 1);
+        }, 10);
+        return () => clearInterval(interval);
       }
-    }, 100);
-    return () => clearInterval(interval);
+    } else {
+      if (buttonSize > 100) {
+        const interval = setInterval(() => {
+          setButtonSize((prevSize) => prevSize - 1);
+        }, 10);
+        return () => clearInterval(interval);
+      }
+    }
   }, [isGrowing, buttonSize]);
 
   return (
